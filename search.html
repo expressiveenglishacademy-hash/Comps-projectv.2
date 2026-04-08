@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Comp Search | Comps HQ</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070b16;
+      --panel: rgba(255, 255, 255, 0.06);
+      --panel-2: rgba(255, 255, 255, 0.04);
+      --panel-border: rgba(255, 255, 255, 0.12);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #22d3ee;
+      --accent-2: #7dd3fc;
+      --danger: #fb7185;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(244, 114, 182, 0.12), transparent 22%),
+        linear-gradient(180deg, #0b1120, var(--bg));
+    }
+
+    .wrap {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 40px 0 64px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      color: white;
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .hero {
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      backdrop-filter: blur(18px);
+      border-radius: 28px;
+      padding: 32px;
+      box-shadow: 0 24px 70px rgba(2, 6, 23, 0.45);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.1);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+      color: #cffafe;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 760px;
+    }
+
+    .form-section {
+      margin-top: 24px;
+      border: 1px solid var(--panel-border);
+      background: var(--panel-2);
+      border-radius: 24px;
+      padding: 24px;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+    }
+
+    .section-text {
+      margin: 0 0 20px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field.full {
+      grid-column: span 3;
+    }
+
+    label {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid var(--panel-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      padding: 0 14px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #64748b;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: rgba(34, 211, 238, 0.7);
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.14);
+    }
+
+    .alert {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(251, 113, 133, 0.24);
+      background: rgba(251, 113, 133, 0.08);
+      color: #fecdd3;
+      display: none;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 18px;
+      border-radius: 16px;
+      text-decoration: none;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+      font-size: 0.95rem;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04111a;
+    }
+
+    .button-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      border: 1px solid var(--panel-border);
+    }
+
+    .helper-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .helper-card {
+      border: 1px solid var(--panel-border);
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .helper-card h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .helper-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .field.full {
+        grid-column: span 2;
+      }
+
+      .helper-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero,
+      .form-section {
+        padding: 22px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: span 1;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="topbar">
+      <a class="brand" href="./index.html">Comps HQ</a>
+      <a class="back-link" href="./index.html">← Back to Dashboard</a>
+    </div>
+
+    <section class="hero">
+      <span class="eyebrow">New Search</span>
+      <h1>Start a New Comp Search</h1>
+      <p class="subtitle">
+        Enter the subject property manually. This version is a static GitHub Pages
+        page, so it validates your required fields and then sends you to the
+        results page placeholder.
+      </p>
+
+      <section class="form-section">
+        <h2 class="section-title">Subject Property</h2>
+        <p class="section-text">
+          Manual entry is required before running the search.
+        </p>
+
+        <form id="compForm">
+          <div class="grid">
+            <div class="field full">
+              <label for="fullAddress">Full Address</label>
+              <input id="fullAddress" name="fullAddress" type="text" placeholder="4128 Glenhaven Drive, Sacramento, CA 95834" required />
+            </div>
+
+            <div class="field">
+              <label for="streetName">Street Name</label>
+              <input id="streetName" name="streetName" type="text" placeholder="Glenhaven Drive" required />
+            </div>
+
+            <div class="field">
+              <label for="city">City</label>
+              <input id="city" name="city" type="text" placeholder="Sacramento" required />
+            </div>
+
+            <div class="field">
+              <label for="state">State</label>
+              <input id="state" name="state" type="text" placeholder="CA" required />
+            </div>
+
+            <div class="field">
+              <label for="zipCode">Zip Code</label>
+              <input id="zipCode" name="zipCode" type="text" placeholder="95834" required />
+            </div>
+
+            <div class="field">
+              <label for="yearBuilt">Year Built</label>
+              <input id="yearBuilt" name="yearBuilt" type="number" placeholder="2004" required />
+            </div>
+
+            <div class="field">
+              <label for="bedrooms">Bedrooms</label>
+              <input id="bedrooms" name="bedrooms" type="number" placeholder="4" required />
+            </div>
+
+            <div class="field">
+              <label for="bathrooms">Bathrooms</label>
+              <input id="bathrooms" name="bathrooms" type="number" step="0.5" placeholder="3" required />
+            </div>
+
+            <div class="field">
+              <label for="lotSize">Lot Size (sqft)</label>
+              <input id="lotSize" name="lotSize" type="number" placeholder="6400" required />
+            </div>
+
+            <div class="field">
+              <label for="timeRange">Sold Date Window</label>
+              <select id="timeRange" name="timeRange" required>
+                <option value="LAST_6_MONTHS">Last 6 months</option>
+                <option value="LAST_12_MONTHS" selected>Last 12 months</option>
+                <option value="LAST_24_MONTHS">Last 24 months</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="sortOrder">Sort Order</label>
+              <select id="sortOrder" name="sortOrder" required>
+                <option value="NEWEST_TO_OLDEST" selected>Newest to oldest</option>
+                <option value="OLDEST_TO_NEWEST">Oldest to newest</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="alertBox" class="alert">
+            Please fill in all required fields before starting a new comp search.
+          </div>
+
+          <div class="actions">
+            <button class="button button-primary" type="submit">Run Comp Search</button>
+            <a class="button button-secondary" href="./index.html">Cancel</a>
+          </div>
+        </form>
+      </section>
+
+      <section class="helper-grid">
+        <article class="helper-card">
+          <h2>Manual Entry First</h2>
+          <p>
+            This flow expects you to enter the subject property details yourself
+            before the search can continue.
+          </p>
+        </article>
+        <article class="helper-card">
+          <h2>Search Logic</h2>
+          <p>
+            Sold comps and active listings are intended to stay in the same city
+            and use the same property similarity rules.
+          </p>
+        </article>
+        <article class="helper-card">
+          <h2>GitHub Pages Version</h2>
+          <p>
+            This is a static HTML version, so the next step can route to a simple
+            `results.html` page later.
+          </p>
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById("compForm");
+    const alertBox = document.getElementById("alertBox");
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const fields = [
+        "fullAddress",
+        "streetName",
+        "city",
+        "state",
+        "zipCode",
+        "yearBuilt",
+        "bedrooms",
+        "bathrooms",
+        "lotSize"
+      ];
+
+      const missing = fields.some((id) => {
+        const field = document.getElementById(id);
+        return !field.value || !field.value.trim();
+      });
+
+      if (missing) {
+        alertBox.classList.add("show");
+        return;
+      }
+
+      alertBox.classList.remove("show");
+      window.location.href = "./results.html";
+    });
+  </script>
+</body>
+</html>
